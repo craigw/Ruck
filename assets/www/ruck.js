@@ -223,8 +223,9 @@ $(document).ready(function() {
   });
 
   $("a.start").click(function() {
-    var startAt = $.now();
     $this = $(this);
+    $this.hide();
+    var startAt = $.now();
 	var content = $this.parents('.content');
 	var segments = content.find('.segment');
 	var totalTime = 0;
