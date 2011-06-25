@@ -248,7 +248,7 @@ $(document).ready(function() {
 		if(current) {
           finished = false;
           var segmentElapsed = Math.round(((elapsedTime - segmentStart) / 1000) * 10) / 10;
-          var segmentRemaining = Math.round(((segmentEnd / 1000) - segmentElapsed) * 10) / 10;
+          var segmentRemaining = Math.round(((segmentDuration / 1000) - segmentElapsed) * 10) / 10;
           $segmentTime.text('Segment: ' + segmentElapsed + 's / ' + segmentRemaining + 's');
           $segment.addClass('current');
 		} else {
@@ -263,6 +263,9 @@ $(document).ready(function() {
         // TODO: work out how long it took to perform this tick so I can more accurately work out when to time the next tick for.
         setTimeout(tick, 90);
       }
+      // TODO: Remove the finished flag in favour of asking if there's any time remaining
+      // TODO: If time remaining <= 0 then show zeros on the counters
+      // TODO: When time remaining <= 0 then remember the session is finished
 	}
 	setTimeout(tick, 90);
   });
