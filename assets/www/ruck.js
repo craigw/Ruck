@@ -252,7 +252,11 @@ $(document).ready(function() {
           $segmentTime.text('Segment: ' + segmentElapsed + 's / ' + segmentRemaining + 's');
           $segment.addClass('current');
 		} else {
-		  $segment.removeClass('current');
+		  if($segment.hasClass('current')) {
+            navigator.notification.vibrate(500)
+            navigator.notification.beep(1)
+            $segment.removeClass('current');
+		  }
 		}
 		segmentStart = segmentEnd;        
       });
