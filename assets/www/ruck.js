@@ -39,7 +39,7 @@ $(document).ready(function() {
       return new Date(this._date.getTime() + this._session.length());
     }
     this.toHTML = function toHTML(week_number, day_number) {
-      return '<div data-role="page" id="week_' + week_number + '_day_' + day_number + '" class="session"><div data-role="header"><h3>Week ' + week_number + ' - Day ' + day_number + '</h1></div><div data-role="content" class="content"><p class="instructions">' + this._session.instructions() + '</p><p><a data-role="button" data-theme="b" class="finished">Done</a></p></div><div data-role="footer"><h4>Ruck!</h4></div></div>';
+      return '<div data-role="page" id="week_' + week_number + '_day_' + day_number + '" class="session"><div data-role="header"><h3>Week ' + week_number + ' - Day ' + day_number + '</h1></div><div data-role="content" class="content"><p class="instructions">' + this._session.instructions() + '</p><p><div class="segment_time"></div><div class="total_time"></div></p><p><a data-role="button" data-theme="b" class="start">Start</a></p></div><div data-role="footer"><h4>Ruck!</h4></div></div>';
     }
   }
 
@@ -80,43 +80,26 @@ $(document).ready(function() {
     this.length = function length() {
       var total = this.warmupTime();
       $.each(this._segments, function(index, segment) {
-        if(segment instanceof Array) {
-          total += 0; // FIXME: calcualte the time taken by the array of segments
-        } else {
-          total += segment
-        }
+        total += segment
       });
       total += this.cooldownTime();
       return total;
     }
     this._sessionInstructions = function _sessionInstructions() {
       var sessions = [];
+      var subsegment_count = 0;
       $.each(this._segments, function(index, segment) {
-        if(segment instanceof Array) {
-          var reps = segment[0];
-          var subsegments = segment[1];
-	        var subsession = ['<ul>'];
-          $.each(subsegments, function(subindex, subsegment) {
-            var minutes = (subsegment / 60);
-            var plural = minutes == 1 ? '' : 's';
-            var activity = (((index + subindex) % 2 == 0) ? 'running' : 'walking')
-            subsession.push('<li>' + minutes.toString() + ' minute' + plural + ' ' + activity + '</li>');
-          });
-          subsession.push('</ul>')
-          sessions.push('<li>' + reps + ' repetitions of:' + subsession.join('') + '</li>');
-        } else {
-          var minutes = (segment / 60);
-          var plural = minutes == 1 ? '' : 's';
-          var activity = ((index % 2 == 0) ? 'running' : 'walking')
-          sessions.push('<li>' + minutes + ' minute' + plural + ' ' + activity + '</li>');
-        }
+        var minutes = (segment / 60);
+        var plural = minutes == 1 ? '' : 's';
+        var activity = (index % 2 == 0 ? 'running' : 'walking');
+        sessions.push('<li class="segment" data-duration="' + segment + '">' + minutes + ' minute' + plural + ' ' + activity + '</li>');
       });
       return sessions.join('');
     }
     this.instructions = function instructions() {
-      var s = "<ul><li>Brisk 5 minute walk to warmup</li>";
+      var s = '<ul class="segments"><li class="segment" data-duration="300">Brisk 5 minute walk to warmup</li>';
       s += this._sessionInstructions();
-      s += '<li>5 minute walk to cool down</li></ul>';
+      s += '<li class="segment" data-duration="300">5 minute walk to cool down</li></ul>';
       return s;
     }
   }
@@ -124,23 +107,23 @@ $(document).ready(function() {
   // The Couch to 5k TrainingProgramme is a great way to get started.
   var c25k = new TrainingProgramme("c25k", "Couch to 5k");
   // Week 1
-  c25k.addTrainingSession(new TrainingSession([ [8, [60, 90]] ]));
-  c25k.addTrainingSession(new TrainingSession([ [8, [60, 90]] ]));
-  c25k.addTrainingSession(new TrainingSession([ [8, [60, 90]] ]));
+  c25k.addTrainingSession(new TrainingSession([ 60, 90, 60, 90, 60, 90, 60, 90, 60, 90, 60, 90, 60, 90, 60 ]));
+  c25k.addTrainingSession(new TrainingSession([ 60, 90, 60, 90, 60, 90, 60, 90, 60, 90, 60, 90, 60, 90, 60 ]));
+  c25k.addTrainingSession(new TrainingSession([ 60, 90, 60, 90, 60, 90, 60, 90, 60, 90, 60, 90, 60, 90, 60 ]));
   // Week 2
-  c25k.addTrainingSession(new TrainingSession([ [6, [90, 120]] ]));
-  c25k.addTrainingSession(new TrainingSession([ [6, [90, 120]] ]));
-  c25k.addTrainingSession(new TrainingSession([ [6, [90, 120]] ]));
+  c25k.addTrainingSession(new TrainingSession([ 90, 120, 90, 120, 90, 120, 90, 120, 90, 120, 90 ]));
+  c25k.addTrainingSession(new TrainingSession([ 90, 120, 90, 120, 90, 120, 90, 120, 90, 120, 90 ]));
+  c25k.addTrainingSession(new TrainingSession([ 90, 120, 90, 120, 90, 120, 90, 120, 90, 120, 90 ]));
   // Week 3
-  c25k.addTrainingSession(new TrainingSession([ [2, [90, 90, 180, 180]] ]));
-  c25k.addTrainingSession(new TrainingSession([ [2, [90, 90, 180, 180]] ]));
-  c25k.addTrainingSession(new TrainingSession([ [2, [90, 90, 180, 180]] ]));
+  c25k.addTrainingSession(new TrainingSession([ 90, 90, 180, 180, 90, 90, 180 ]));
+  c25k.addTrainingSession(new TrainingSession([ 90, 90, 180, 180, 90, 90, 180 ]));
+  c25k.addTrainingSession(new TrainingSession([ 90, 90, 180, 180, 90, 90, 180 ]));
   // Week 4
   c25k.addTrainingSession(new TrainingSession([ 180, 90, 300, 150, 180, 90, 300 ]));
   c25k.addTrainingSession(new TrainingSession([ 180, 90, 300, 150, 180, 90, 300 ]));
   c25k.addTrainingSession(new TrainingSession([ 180, 90, 300, 150, 180, 90, 300 ]));
   // Week 5
-  c25k.addTrainingSession(new TrainingSession([ [3, [300, 180]] ]));
+  c25k.addTrainingSession(new TrainingSession([ 300, 180, 300, 180, 300 ]));
   c25k.addTrainingSession(new TrainingSession([ 480, 300, 480 ]));
   c25k.addTrainingSession(new TrainingSession([ 1200 ]));
   // Week 6
@@ -239,7 +222,47 @@ $(document).ready(function() {
     tx.executeSql('CREATE TABLE IF NOT EXISTS sessions (name CHAR(255), completed_at DATETIME)');
   });
 
-  $(".finished").click(function() {
-    // TODO: Mark this as completed...
+  $("a.start").click(function() {
+    var startAt = $.now();
+    $this = $(this);
+	var content = $this.parents('.content');
+	var segments = content.find('.segment');
+	var totalTime = 0;
+	var paused = false;
+	$.each(segments, function(index, segment) {
+	  totalTime += parseInt($(segment).attr('data-duration'));
+	});
+	var $totalTime = content.find('.total_time');
+	var $segmentTime = content.find('.segment_time');
+
+	var tick = function tick() {
+	  var elapsedTime = ($.now() - startAt);
+	  var segmentStart = 0;
+	  var finished = true;
+      $.each(segments, function(index, segment) {
+        var $segment = $(segment);
+		var segmentDuration = parseInt($segment.attr('data-duration')) * 1000;
+		var segmentEnd = segmentStart + segmentDuration;
+        var current = (segmentStart <= elapsedTime && elapsedTime < segmentEnd);
+		if(current) {
+          finished = false;
+          var segmentElapsed = Math.round(((elapsedTime - segmentStart) / 1000) * 10) / 10;
+          var segmentRemaining = Math.round(((segmentEnd / 1000) - segmentElapsed) * 10) / 10;
+          $segmentTime.text('Segment: ' + segmentElapsed + 's / ' + segmentRemaining + 's');
+          $segment.addClass('current');
+		} else {
+		  $segment.removeClass('current');
+		}
+		segmentStart = segmentEnd;        
+      });
+	  var sessionSeconds = Math.round((elapsedTime / 1000) * 10) / 10;
+	  var sessionRemaining = Math.round((totalTime - sessionSeconds) * 10) / 10;
+      $totalTime.text('Session: ' + sessionSeconds + 's / ' + sessionRemaining + 's');
+      if(!finished && !paused) {
+        // TODO: work out how long it took to perform this tick so I can more accurately work out when to time the next tick for.
+        setTimeout(tick, 90);
+      }
+	}
+	setTimeout(tick, 90);
   });
 });

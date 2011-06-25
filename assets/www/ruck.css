@@ -1,4 +1,8 @@
-html, body, p {
-	background-color: black;
-	color: #eee;
+.segment.current {
+  color: red;
+  background-color: black;
+  font-weight: bold;
+}
+.segment {
+   font-size: 8pt;
 }
